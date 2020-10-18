@@ -33,6 +33,7 @@ export default {
     };
   },
   methods: {
+
     setCahnge: function () {
       console.log(this.setName, this.setDescription);
       let params = {
@@ -41,6 +42,7 @@ export default {
       };
       this.$store.commit("SET_CHANGE", params);
     },
+
     closeModla: function () {
       this.$store.commit("CLOSE_MODAL");
     },
@@ -55,6 +57,7 @@ export default {
         this.setName = value;
       },
     },
+
     description: {
       get: function () {
         this.description = this.$store.state.editData.description;

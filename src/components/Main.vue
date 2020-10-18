@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <div v-show="showList.length == 0">Загрузка...
+      <div>Имитация задержки</div>
+    </div>
     <Modal v-show="showModal"></Modal>
     <CardBeer
       class="beer"
@@ -33,15 +36,19 @@ export default {
         (this.showList.length !== 0 || this.nextPage.length !== 0)
       );
     },
+
     showModal(){
       return this.$store.state.modal
     },
+
     showList() {
       return this.$store.state.showList;
     },
+
     nextPage() {
       return this.$store.state.nextPage;
     },
+
     listEmpty() {
       return this.$store.state.listEmpty;
     },

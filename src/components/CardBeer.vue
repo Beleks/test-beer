@@ -47,6 +47,7 @@ export default {
   },
   components: {},
   methods: {
+
     editCard: function (index) {
       let params = {
         index: this.index,
@@ -55,11 +56,11 @@ export default {
       };
       this.$store.commit("OPEN_EDIT", params);
     },
+
     deletCard: function (index) {
       this.$store.commit("DELETE_ELEMENT", index);
     },
   },
-  computed: {},
 };
 </script>
 
@@ -153,17 +154,16 @@ export default {
         background-color: rgb(225, 211, 248);
         margin-bottom: 0.4em;
       }
-      .text{
-        overflow:hidden;
+      .text {
+        overflow: hidden;
         word-wrap: break-word;
       }
     }
   }
 }
 @media (max-width: 650px) {
-  .card{
-    width:fit-content;
+  .card {
+    width: fit-content;
   }
 }
-
 </style>

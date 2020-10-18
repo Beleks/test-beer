@@ -13,11 +13,15 @@ export default new Vuex.Store({
     // (значение listEmpty становиться "true" как только следующая страница возращает пустой массив)
     nextPageLoading: true, // по умолчанию список который скрыт находиться в статусе загрузки
     // ========================
+    // Решил сделать следующим образом: 
+    // данные для редоктирования в state, а из state в modal
+    // А потому уже по index обращаться к элементу массива showList и заменять данные 
+    // (Просто вариант с props и emmit в голове мне не очень понравился из-за потенциальной большой вложенности )
     // 
-    modal: false,
+    modal: false, // показывает открыто ли модальное окно
     editData: {
-      index: 0,
-      name: '',
+      index: 0, 
+      name: '', 
       description: ''
     }
   },
@@ -25,24 +29,31 @@ export default new Vuex.Store({
     CLOSE_MODAL(state) {
       state.modal = false
     },
+
     SET_CHANGE(state, params) {
+      // сохраняем данные
       let index = state.editData.index
       let changeElement = state.showList[index]
       changeElement.name = params.name
       changeElement.description = params.description
       state.modal = false
     },
+
     OPEN_EDIT(state, params) {
       state.modal = true
+      // передаем данные из CardBeer (по которому мы кликнули) в state 
       state.editData = params
     },
+
     DELETE_ELEMENT(state, index) {
       state.showList.splice(index, 1)
     },
+
     SHOW_NEXT(state) {
       state.showList = state.showList.concat(state.nextPage)
       state.nextPage = []
     },
+
     SET_BEER_MAS(state, massiv) {
       if (massiv.length !== 0) {
         if (state.showList.length === 0) {
@@ -53,12 +64,15 @@ export default new Vuex.Store({
       } else {
         // Если мы получили пустой массив, то список закончен 
         // кнопака (Show next) больше не будет показываться
+        
         state.listEmpty = true
       }
     },
+
     SET_NUMBER_OF_PAGE(state, number) {
       state.loadPage = number
     },
+
     NEXT_PAGE_LOADING(state, status) {
       // Следующая страница загружена и есть возможность нажать на кнопку "show next"
       state.nextPageLoading = status
@@ -111,6 +125,13 @@ export default new Vuex.Store({
       // Далее идет запрос к следующией странице
       // Которая при загрузке попадает уже в nexPage. 
       // 
+      // 
+      // Если бы мы обращались к api следующей стр. (после клика) что бы получить страницу,
+      // то в конеце списка у нас показывалась бы кнопка cо статусом (show next)
+      // После нажатия на которую мы бы сначала получили пустой массив, а уже потом скрыли бы кнопку.
+      // Это я считаю не совсем правильно поэтому решил загружать данные следующей стр. что бы своевременно скрыть кнопку
+      // и не сбить потенциального пользователя с толку.
+
 
       let i = 0
       let numberOfPage
@@ -121,6 +142,10 @@ export default new Vuex.Store({
       }
 
       // имитация задержки (для визуальной проверки статуса Loading...)
+      // Если setInterval поставить 0,
+      // То задержка будет незначительная и вторая страница (page 2) может загрузиться раньше чем (page 1)
+
+      // Я считаю что это не критично но так же мог и реализовать последовательную загрузку.
       let interval = setInterval(() => {
         getPage(URL, loadPage)
         i++
@@ -130,7 +155,7 @@ export default new Vuex.Store({
           commit("SET_NUMBER_OF_PAGE", loadPage)
           clearInterval(interval)
         }
-      }, 1000);
+      },0);
     }
   },
   modules: {
