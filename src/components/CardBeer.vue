@@ -53,12 +53,11 @@ export default {
 <style lang="scss" scoped>
 .card {
   background-color: #fff;
-  max-width: 700px;
+  width: 700px;
   padding: 0.8em;
   border-radius: 10px;
   margin-bottom: 1em;
-  margin: 1em auto;
-  box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.280);
+  box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.1);
   .head {
     display: flex;
     align-items: center;
