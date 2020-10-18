@@ -11,9 +11,34 @@ export default new Vuex.Store({
     loadPage: 1, // показывает с какой страницы получать данные 
     listEmpty: false, // показывает закочился список или нет 
     // (значение listEmpty становиться "true" как только следующая страница возращает пустой массив)
-    nextPageLoading: true // по умолчанию список который скрыт находиться в статусе загрузки
+    nextPageLoading: true, // по умолчанию список который скрыт находиться в статусе загрузки
+    // ========================
+    // 
+    modal: false,
+    editData: {
+      index: 0,
+      name: '',
+      description: ''
+    }
   },
   mutations: {
+    CLOSE_MODAL(state) {
+      state.modal = false
+    },
+    SET_CHANGE(state, params) {
+      let index = state.editData.index
+      let changeElement = state.showList[index]
+      changeElement.name = params.name
+      changeElement.description = params.description
+      state.modal = false
+    },
+    OPEN_EDIT(state, params) {
+      state.modal = true
+      state.editData = params
+    },
+    DELETE_ELEMENT(state, index) {
+      state.showList.splice(index, 1)
+    },
     SHOW_NEXT(state) {
       state.showList = state.showList.concat(state.nextPage)
       state.nextPage = []
@@ -48,7 +73,7 @@ export default new Vuex.Store({
 
       commit('NEXT_PAGE_LOADING', true) // Следующая страница становиться в статусе "Loadind.."
 
-      function getPage(URL, page, index) {
+      function getPage(URL, page) {
         try {
           axios.get(URL, {
             params: {
@@ -56,7 +81,7 @@ export default new Vuex.Store({
               limit: 25
             }
           }).then(response => {
-            console.log(response.data, index)
+            console.log(response.data)
             commit('SET_BEER_MAS', response.data)
             // Если длина массива nextPage !== 0 , то получается следуюящая страница загружена. 
             // Кнопка (Loading... -> show next) 
@@ -65,8 +90,8 @@ export default new Vuex.Store({
             }
           })
         }
-        catch {
-
+        catch (e) {
+          console.log(e)
         }
       }
 
@@ -89,7 +114,6 @@ export default new Vuex.Store({
 
       let i = 0
       let numberOfPage
-      console.log(state.showList.length, 'длина массива')
       if (state.showList.length === 0) {
         numberOfPage = 2
       } else {
@@ -106,7 +130,7 @@ export default new Vuex.Store({
           commit("SET_NUMBER_OF_PAGE", loadPage)
           clearInterval(interval)
         }
-      }, 4000);
+      }, 1000);
     }
   },
   modules: {

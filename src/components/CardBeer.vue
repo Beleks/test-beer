@@ -2,17 +2,17 @@
   <div class="card">
     <div class="head">
       <div class="left">
-        <div class="number">{{ number }}</div>
+        <div class="number">{{ index + 1 }}</div>
         <div class="name">
           <img src="@/assets/beer.png" alt="" />
           {{ beer.name }}
         </div>
       </div>
       <div class="right">
-        <div class="edite button">
+        <div class="edite button" @click="editCard(index)">
           <img src="@/assets/edit.png" alt="" />
         </div>
-        <div class="delete button">
+        <div class="delete button" @click="deletCard(index)">
           <img src="@/assets/delete.png" alt="" />
         </div>
       </div>
@@ -42,10 +42,23 @@
 
 export default {
   props: {
-    number: Number,
+    index: Number,
     beer: Object,
   },
   components: {},
+  methods: {
+    editCard: function (index) {
+      let params = {
+        index: this.index,
+        name: this.beer.name,
+        description: this.beer.description,
+      };
+      this.$store.commit("OPEN_EDIT", params);
+    },
+    deletCard: function (index) {
+      this.$store.commit("DELETE_ELEMENT", index);
+    },
+  },
   computed: {},
 };
 </script>
@@ -53,10 +66,10 @@ export default {
 <style lang="scss" scoped>
 .card {
   background-color: #fff;
-  width: 700px;
+  width: 600px;
   padding: 0.8em;
   border-radius: 10px;
-  margin-bottom: 1em;
+  margin: 0.5em 0.3em;
   box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.1);
   .head {
     display: flex;
@@ -140,7 +153,17 @@ export default {
         background-color: rgb(225, 211, 248);
         margin-bottom: 0.4em;
       }
+      .text{
+        overflow:hidden;
+        word-wrap: break-word;
+      }
     }
   }
 }
+@media (max-width: 650px) {
+  .card{
+    width:fit-content;
+  }
+}
+
 </style>

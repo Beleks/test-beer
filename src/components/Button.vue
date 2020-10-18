@@ -38,6 +38,8 @@ export default {
 
 <style lang="scss" scoped>
 .button {
+  margin: 1em auto;
+
   user-select: none;
   font-size: 1.2rem;
   cursor: pointer;
